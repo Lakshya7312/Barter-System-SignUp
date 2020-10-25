@@ -10,12 +10,6 @@ export default class SignupLoginScreen extends React.Component {
         this.state = {
             email: "",
             password: "",
-            confirm_password: "",
-            isModalVisible: "false",
-            first_name: "",
-            last_name: "",
-            phone_number: "",
-            address: "",
         }
     }
 
@@ -31,21 +25,11 @@ export default class SignupLoginScreen extends React.Component {
             })
     }
 
-    signUp = async (email, password, confirmPassword) => {
-        if (passowrd !== confirmPassword) {
-            Alert.alert("Psswords do not match\nPlease try again after check your password!");
-        } else {
+    signUp = async (email, password) => {
             firebase.auth().createUserWithEmailAndPassword(email, password)
                 .then((response) => {
-                    db.collection('users').add({
-                        first_name: this.state.first_name,
-                        last_name: this.state.last_name,
-                        email: this.state.email,
-                        mobile_number: this.state.mobile_number,
-                        username: this.state.username,
-                        address: this.state.address,
+                return Alert.alert("User Registered Successfully!");
                     })
-                    return Alert.alert("User Registered Successfully!");
                 })
                 .catch(function (error) {
                     var errorCode = error.code;
@@ -55,47 +39,8 @@ export default class SignupLoginScreen extends React.Component {
         }
     }
 
-    showModal = () => {
-        return (
-            <Modal animationType="fade"
-                transparent={true}
-                visible={this.state.isModalVisible}
-            >
-                <View style={styles.modalContainer}>
-                    <ScrollView style={{ width: '100%' }}>
-                        <KeyboardAvoidingView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <Text style={{ fontWeight: "700", fontSize: 30, alignSelf: "center", color: "#fff" }}>REGISTRATION</Text>
-                            <TextInput style={styles.regForm} placeholder="First Name" placeholderTextColor="#fff" maxLength={8} onChangeText={(text) => { this.setState({ firstName: text }) }} />
-                            <TextInput style={styles.regForm} placeholder="Last Name" placeholderTextColor="#fff" maxLength={8} onChangeText={(text) => { this.setState({ lastName: text }) }} />
-                            <TextInput style={styles.regForm} placeholder="Username" placeholderTextColor="#fff" maxLength={12} onChangeText={(text) => { this.setState({ username: text }) }} />
-                            <TextInput style={styles.address} placeholder="Address" placeholderTextColor="#fff" multiline={true} onChangeText={(text) => { this.setState({ address: text }) }} />
-                            <TextInput style={styles.regForm} placeholder="Email" placeholderTextColor="#fff" keyboardType="email-address" onChangeText={(text) => { this.setState({ email: text }) }} />
-                            <TextInput style={styles.regForm} placeholder="Mobile Number" placeholderTextColor="#fff" keyboardType="numeric" maxLength={10} onChangeText={(text) => { this.setState({ contact: text }) }} />
-                            <TextInput style={styles.regForm} placeholder="Password" placeholderTextColor="#fff" secureTextEntry={true} onChangeText={(text) => { this.setState({ password: text }) }} />
-                            <TextInput style={styles.regForm} placeholder="Confirm Password" placeholderTextColor="#fff" secureTextEntry={true} onChangeText={(text) => { this.setState({ confirmPassword: text }) }} />
-                            <View style={styles.modalBackButton}>
-                                <TouchableOpacity style={[styles.button, { borderRadius: 5, marginTop: 25, width: 120, height: 35 }]} onPress={() => { this.signUp(this.state.email, this.state.password, this.state.confirmPassword) }}>
-                                    <Text style={{ color: "#000", alignSelf: "center", marginTop: 6 }}>Register</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.modalBackButton}>
-                                <TouchableOpacity style={[styles.button, { borderRadius: 5, marginTop: 30 }]} onPress={() => { this.setState({ isModalVisible: false }) }}>
-                                    <Text style={{ color: "#000", alignSelf: "center", marginTop: 1 }}>Cancel</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </KeyboardAvoidingView>
-                    </ScrollView>
-                </View>
-            </Modal>
-        );
-    }
-
-    render() {
-        return (
-            <View style={styles.container}>
-                <View style={{ justifyContent: "center", alignItems: "center" }}>
-                    {this.showModal()}
-                </View>
+   render() {
+       return (
                 <Text style={{ fontWeight: "700", fontSize: 25, alignSelf: "center", marginTop: 30 }}>BARTER SYSTEM</Text>
                 <Image source={require("../assets/Welcome.png")} style={{ marginTop: 10, height: 250, width: 300, alignSelf: "center" }} />
                 <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#fff" keyboardType="email-address" onChangeText={(text) => { this.setState({ email: text }) }} />
@@ -103,7 +48,7 @@ export default class SignupLoginScreen extends React.Component {
                 <TouchableOpacity style={styles.button} onPress={() => { this.login(this.state.email, this.state.password) }}>
                     <Text style={styles.buttonText}>Login</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => { this.setState({ isModalVisible: true }) }}>
+                <TouchableOpacity style={styles.button} onPress={() => { this.signUp(this.state.email, this.state.password) }}>
                     <Text style={styles.buttonText}>Sign Up</Text>
                 </TouchableOpacity>
                 <Image source={require("../assets/Sign-up.png")} style={{ height: 270, width: 350, alignSelf: "center" }} />
@@ -119,11 +64,6 @@ const styles = StyleSheet.create({
         width: '100%',
     },
 
-    modalContainer: {
-        flex: 1,
-        backgroundColor: "rgba(0,0,0,0.9)"
-    },
-
     input: {
         borderWidth: 1.3,
         borderColor: "#ffeadb",
@@ -132,28 +72,6 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         width: 180,
         height: 27,
-        color: "#fff"
-    },
-
-    address: {
-        borderWidth: 1.3,
-        borderColor: "#ffeadb",
-        marginTop: 30,
-        paddingLeft: 9,
-        alignSelf: "center",
-        width: 160,
-        height: 80,
-        color: "#fff"
-    },
-
-    regForm: {
-        borderWidth: 1.3,
-        borderColor: "#ffeadb",
-        marginTop: 30,
-        paddingLeft: 9,
-        alignSelf: "center",
-        width: 160,
-        height: 30,
         color: "#fff"
     },
 
@@ -174,10 +92,4 @@ const styles = StyleSheet.create({
         fontWeight: "400",
         textAlignVertical: "center"
     },
-
-    modalButton: {
-        backgroundColor: "#f7c5a8",
-        alignSelf: "center",
-        marginTop: 15,
-    }
 })
